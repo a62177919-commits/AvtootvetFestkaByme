@@ -1,30 +1,26 @@
-from telethon import TelegramClient, events
+from pyrogram import Client, filters
 import os
 
 api_id = int(os.environ["API_ID"])
 api_hash = os.environ["API_HASH"]
 
-# Используем session.session из репозитория
-client = TelegramClient("session", api_id, api_hash)
+app = Client(
+    "session",  # имя твоего session.session
+    api_id=api_id,
+    api_hash=api_hash
+)
 
-@client.on(events.NewMessage(pattern=r'^/start$'))
-async def start(event):
-    await event.reply("Бот работает! Сессия активна.")
+@app.on_message(filters.command("start"))
+async def start_handler(client, message):
+    await message.reply("Pyrogram автоответчик работает!")
 
-@client.on(events.NewMessage(pattern=r'^/ping$'))
-async def ping(event):
-    await event.reply("pong")
+@app.on_message(filters.command("ping"))
+async def ping_handler(client, message):
+    await message.reply("pong")
 
-@client.on(events.NewMessage)
-async def echo(event):
-    text = event.raw_text
-    if text.startswith("/"):
-        return
-    await event.reply(f"Ты написал: {text}")
+@app.on_message(filters.text & ~filters.command(["start", "ping"]))
+async def echo_handler(client, message):
+    await message.reply(f"Ты написал: {message.text}")
 
-async def main():
-    print("Бот запущен и слушает сообщения...")
-
-client.start()
-client.loop.run_until_complete(main())
-client.run_until_disconnected()
+print("Бот запущен и слушает сообщения...")
+app.run()
