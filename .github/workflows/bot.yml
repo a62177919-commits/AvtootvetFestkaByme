@@ -3,7 +3,7 @@ name: Telegram Userbot
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"   # перезапуск каждые 6 часов
+    - cron: "0 */6 * * *"
 
 jobs:
   run-bot:
