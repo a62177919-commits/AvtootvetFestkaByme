@@ -1,4 +1,4 @@
-name: Telegram Userbot
+name: Pyrogram Userbot
 
 on:
   workflow_dispatch:
